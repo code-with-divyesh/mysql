@@ -16,3 +16,4 @@ insert into DEPARTMENT values(40, 'Sales',"sales01",01, 'NY');
 insert into DEPARTMENT values(110, 'RND',"rnd01",01, 'AH'); 
 insert into DEPARTMENT values(130, 'finance',"fin01",01, 'mp');
 insert into DEPARTMENT values(140, 'purchase',"pur01",01, null);
+insert into department value (150, 'Technical', 'tech01', 01, 'TP');
