@@ -1,3 +1,4 @@
+use departments;
 /* --------------------------------------------------------
    SELECT STATEMENT
    Purpose: Used to retrieve data from a database table
@@ -116,3 +117,18 @@ WHERE dept_no BETWEEN 10 AND 35;
 */
 SELECT * FROM department 
 WHERE location IN ('mu', 'Ah');
+
+/*
+	Query 14:
+    Check IS Null-its returns the null value in columns
+*/
+
+select * from department
+where location is null;
+
+/*
+	Query 15:
+    Check IS NOt Null-its return the non null value in columns
+*/
+select * from department
+where location is not null;
