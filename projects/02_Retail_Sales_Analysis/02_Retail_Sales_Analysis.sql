@@ -1,4 +1,4 @@
--- ============================================================
+--- ============================================================
 -- RETAIL SALES ANALYSIS PROJECT
 -- Database Creation, Data Import & Business Queries
 -- ============================================================
@@ -65,16 +65,28 @@ SET sale_date = STR_TO_DATE(TRIM(@sale_date), '%d-%m-%Y');
 -- ------------------------------------------------------------
 
 -- View all records
-SELECT * FROM retail_sales;
+SELECT 
+    *
+FROM
+    retail_sales;
 
 -- Total number of records
-SELECT COUNT(*) FROM retail_sales;
+SELECT 
+    COUNT(*) AS Total_records
+FROM
+    retail_sales;
 
 -- Count of unique customers
-SELECT COUNT(DISTINCT customer_id) FROM retail_sales;
+SELECT 
+    COUNT(DISTINCT customer_id) AS Customer_count
+FROM
+    retail_sales;
 
 -- Count of unique categories
-SELECT COUNT(DISTINCT category) FROM retail_sales;
+SELECT 
+    COUNT(DISTINCT category) AS Category_count
+FROM
+    retail_sales;
 
 -- View distinct categories
 SELECT DISTINCT category FROM retail_sales;
