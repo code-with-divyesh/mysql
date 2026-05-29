@@ -85,7 +85,7 @@ LIMIT 1;
 
 SELECT 
     p.size, 
-    SUM(o.quantity) AS total_quantity   -- ✅ FIX 2: COUNT → SUM(quantity)
+    SUM(o.quantity) AS total_quantity   
 FROM order_details o
 JOIN pizzas p 
 ON o.pizza_id = p.pizza_id
@@ -183,18 +183,19 @@ LIMIT 3;
 
 SELECT 
     pt.category,
-    ROUND(
-        SUM(od.quantity * p.price) /
-        (SELECT SUM(o.quantity * p.price)   -- ✅ FIX 4: Removed ROUND inside subquery
-         FROM order_details o
-         JOIN pizzas p ON o.pizza_id = p.pizza_id)
-        * 100, 2
-    ) AS revenue
-FROM pizza_types pt
-JOIN pizzas p 
-ON pt.pizza_type_id = p.pizza_type_id
-JOIN order_details od 
-ON od.pizza_id = p.pizza_id
+    ROUND(SUM(od.quantity * p.price) / (SELECT 
+                    SUM(o.quantity * p.price)
+                FROM
+                    order_details o
+                        JOIN
+                    pizzas p ON o.pizza_id = p.pizza_id) * 100,
+            2) AS revenue
+FROM
+    pizza_types pt
+        JOIN
+    pizzas p ON pt.pizza_type_id = p.pizza_type_id
+        JOIN
+    order_details od ON od.pizza_id = p.pizza_id
 GROUP BY pt.category
 ORDER BY revenue DESC;
 
@@ -204,6 +205,7 @@ ORDER BY revenue DESC;
 
 SELECT 
     order_date,
+    revenue,
     SUM(revenue) OVER (ORDER BY order_date) AS cum_revenue
 FROM (
     SELECT 
