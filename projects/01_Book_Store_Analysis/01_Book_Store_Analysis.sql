@@ -101,83 +101,137 @@ SET Order_Date = STR_TO_DATE(@Order_Date, '%d-%m-%Y');
 
 -- 1) Retrieve all books in the "Fiction" genre:
 
-select * from books
-where Genre="Fiction";
+SELECT 
+    *
+FROM
+    books
+WHERE
+    Genre = 'Fiction';
 
 
 
 -- 2) Find books published after the year 1950:
 
-select * from books
-where published_year>="1950";
+SELECT 
+    *
+FROM
+    books
+WHERE
+    published_year >= '1950';
 
 -- 3) List all customers from the Canada:
 
 SET SQL_SAFE_UPDATES = 0;
 
-select * from customers;
-UPDATE Customers
-SET Country = TRIM(REPLACE(Country, '\r', ''));
+SELECT 
+    *
+FROM
+    customers;
+UPDATE Customers 
+SET 
+    Country = TRIM(REPLACE(Country, '', ''));
 
-select * from customers
-where Country="Canada";
+SELECT 
+    *
+FROM
+    customers
+WHERE
+    Country = 'Canada';
 
 
 -- 4) Show orders placed in November 2023:
 
 select * from orders;
-SELECT *
-FROM Orders
-WHERE Order_Date >= '2023-11-01'
-AND Order_Date < '2023-12-01';
+SELECT 
+    *
+FROM
+    Orders
+WHERE
+    Order_Date >= '2023-11-01'
+        AND Order_Date < '2023-12-01';
 
-SELECT *
-FROM Orders
-WHERE Order_Date 
-BETWEEN '2023-11-01' AND '2023-11-30';
+SELECT 
+    *
+FROM
+    Orders
+WHERE
+    Order_Date BETWEEN '2023-11-01' AND '2023-11-30';
 
 
 
 -- 5) Retrieve the total stock of books available:
 
-select sum(stock) 
-from books;
+SELECT 
+    SUM(stock)
+FROM
+    books;
 
 -- 6) Find the details of the most expensive book:
 
-select * from books where price = (select max(price) from books);
+SELECT 
+    *
+FROM
+    books
+WHERE
+    price = (SELECT 
+            MAX(price)
+        FROM
+            books);
 
-select * from books order by price desc limit 1;
+SELECT 
+    *
+FROM
+    books
+ORDER BY price DESC
+LIMIT 1;
 
 -- 7) Show all customers who ordered more than 1 quantity of a book:
 
-select * from customers 
-where customer_id in 
-	(select customer_id 
-	from orders 
-	where quantity>1);
+SELECT 
+    *
+FROM
+    customers
+WHERE
+    customer_id IN (SELECT 
+            customer_id
+        FROM
+            orders
+        WHERE
+            quantity > 1);
 
 -- 8) Retrieve all orders where the total amount exceeds $20:
 
-select * from orders 
-where total_amount>20;
+SELECT 
+    *
+FROM
+    orders
+WHERE
+    total_amount > 20;
 
 
 -- 9) List all genres available in the Books table:
 
-select distinct(genre) from books;
+SELECT DISTINCT
+    (genre)
+FROM
+    books;
 
 -- 10) Find the book with the lowest stock:
 
-SELECT *
-FROM Books
-WHERE Stock = (
-    SELECT MIN(Stock)
-    FROM Books
-);
+SELECT 
+    *
+FROM
+    Books
+WHERE
+    Stock = (SELECT 
+            MIN(Stock)
+        FROM
+            Books);
 
-SELECT *
-FROM Books
+SELECT 
+    *
+FROM
+    Books
 ORDER BY Stock ASC
 LIMIT 1;
 
@@ -186,76 +240,120 @@ LIMIT 1;
 
 -- 11) Calculate the total revenue generated from all orders:
 
-select sum(total_amount) as Total_Revenue from orders;
+SELECT 
+    SUM(total_amount) AS Total_Revenue
+FROM
+    orders;
 
 -- Advance Questions : 
 
 -- 1) Retrieve the total number of books sold for each genre:
 
 
-select distinct b.genre,sum(o.quantity)  as total_no_of_books
-from books b
-join orders o 
-on b.Book_ID=o.Book_ID
-group by b.genre
+SELECT DISTINCT
+    b.genre, SUM(o.quantity) AS total_no_of_books
+FROM
+    books b
+        JOIN
+    orders o ON b.Book_ID = o.Book_ID
+GROUP BY b.genre
 ;
 
 -- 2) Find the average price of books in the "Fantasy" genre:
 
-select avg(price) as Avg_Price from books where genre="Fantasy";
+SELECT 
+    AVG(price) AS Avg_Price
+FROM
+    books
+WHERE
+    genre = 'Fantasy';
 
 
 -- 3) List customers who have placed at least 2 orders:
 
-select c.customer_id,c.name,count(o.order_id) as order_count 
-from orders o
-join customers c
-on c.customer_id=o.customer_id
-group by c.customer_id 
-having count(o.order_id)>=2; 
+SELECT 
+    c.customer_id, c.name, COUNT(o.order_id) AS order_count
+FROM
+    orders o
+        JOIN
+    customers c ON c.customer_id = o.customer_id
+GROUP BY c.customer_id
+HAVING COUNT(o.order_id) >= 2; 
 
 -- 4) Find the most frequently ordered book:
 
-select b.Book_id,b.title, count(o.order_id) as order_count 
-from orders o 
-join books b
-on b.book_id=o.book_id
-group by b.Book_id
-order by order_count desc limit 1;
+SELECT 
+    b.Book_id, b.title,SUM(o.quantity) AS order_count
+FROM
+    orders o
+        JOIN
+    books b ON b.book_id = o.book_id
+GROUP BY b.Book_id
+ORDER BY order_count DESC
+LIMIT 1;
 
 -- 5) Show the top 3 most expensive books of 'Fantasy' Genre :
 
-select book_id,title,price from books where genre="Fantasy" order by price desc limit 3; 
+SELECT 
+    book_id, title, price
+FROM
+    books
+WHERE
+    genre = 'Fantasy'
+ORDER BY price DESC
+LIMIT 3; 
 
 -- 6) Retrieve the total quantity of books sold by each author:
 
-select b.author,sum(o.quantity)  as Total_books_sold
-from books b join orders o 
-on b.book_id=o.book_id
-group by b.author;
+SELECT 
+    b.author, SUM(o.quantity) AS Total_books_sold
+FROM
+    books b
+        JOIN
+    orders o ON b.book_id = o.book_id
+GROUP BY b.author;
 
 
 -- 7) List the cities where customers who spent over $30 are located:
 
-select distinct(c.city),o.total_amount from customers c join orders o
-on c.customer_id=o.customer_id 
-where o.total_amount>30;
+SELECT DISTINCT
+    (c.city), o.total_amount
+FROM
+    customers c
+        JOIN
+    orders o ON c.customer_id = o.customer_id
+WHERE
+    o.total_amount > 30;
 
 -- 8) Find the customer who spent the most on orders:
 
-select c.customer_id,c.name,sum(o.total_amount) as total_spent from customers c join orders o
-on c.customer_id=o.customer_id 
-group by c.customer_id,c.name
-order by total_spent desc limit 1;
+SELECT 
+    c.customer_id, c.name, SUM(o.total_amount) AS total_spent
+FROM
+    customers c
+        JOIN
+    orders o ON c.customer_id = o.customer_id
+GROUP BY c.customer_id , c.name
+ORDER BY total_spent DESC
+LIMIT 1;
 
 
 
 -- 9) Calculate the stock remaining after fulfilling all orders:
 
-select b.book_id,b.title,b.stock,coalesce(sum(o.quantity),0) as order_quantity,b.stock-coalesce(sum(o.quantity),0) as remaining 
-from books b 
-left join orders o
-on b.book_id=o.book_id
-group by b.book_id
+SELECT 
+    b.book_id,
+    b.title,
+    b.stock,
+    COALESCE(SUM(o.quantity), 0) AS order_quantity,
+    b.stock - COALESCE(SUM(o.quantity), 0) AS remaining
+FROM
+    books b
+        LEFT JOIN
+    orders o ON b.book_id = o.book_id
+GROUP BY
+b.book_id,
+b.title,
+b.stock
 ;
 
